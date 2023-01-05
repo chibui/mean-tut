@@ -15,17 +15,19 @@ import { MatToolbarModule} from '@angular/material/toolbar';
 import { AppComponent } from './app.component';
 import { PostsComponent } from './posts/posts.component';
 import { PostCreateComponent } from './posts/post-create/post-create.component';
+import { HeaderComponent } from './header/header.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    PostsComponent,
-    PostCreateComponent
+    HeaderComponent,
+    PostCreateComponent,
+    PostsComponent
   ],
   imports: [
+    BrowserAnimationsModule,
     BrowserModule,
     FormsModule,
-    BrowserAnimationsModule,
     MatButtonModule,
     MatCardModule,
     MatDialogModule,
