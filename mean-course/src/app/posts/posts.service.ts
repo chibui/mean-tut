@@ -23,11 +23,14 @@ export class PostsService {
     );
   }
 
-  deletePost(id: string) {
+  deletePost(postId: string) {
     this.http
-      .delete<{message: string}>(`${this.baseURL}/${id}`)
-        .subscribe((responseData) => {
-          console.log(responseData.message);
+      .delete<{message: string}>(`${this.baseURL}/${postId}`)
+        .subscribe(() => {
+          const updatedPosts = this.posts.filter(post => post.id !== postId);
+
+          this.posts = updatedPosts;
+          this.postsUpdated.next([...this.posts]);
         });
   }
 

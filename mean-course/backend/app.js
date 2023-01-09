@@ -62,7 +62,7 @@ app.get(baseURL, (req, res, next) => {
     });
 });
 
-app.delete(baseURL + '/:id', (req, res, next) => {
+app.delete(`${baseURL}/:id`, (req, res, next) => {
   Post.deleteOne({_id: req.params.id})
     .then(result => {
       console.log(result);
