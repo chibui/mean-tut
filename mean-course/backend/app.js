@@ -5,6 +5,8 @@ const DB_CONNECT = require('./constants');
 
 const Post = require('./models/post');
 
+const baseURL = '/api/posts'
+
 const app = express();
 
 mongoose.connect(DB_CONNECT)
@@ -34,7 +36,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.post('/api/posts', (req, res, next) => {
+app.post(baseURL, (req, res, next) => {
   const post = new Post({
     content: req.body.content,
     title: req.body.title
@@ -47,7 +49,7 @@ app.post('/api/posts', (req, res, next) => {
   });
 })
 
-app.get('/api/posts', (req, res, next) => {
+app.get(baseURL, (req, res, next) => {
   Post.find()
     .then(posts => {
       res.status(200).json({
@@ -57,6 +59,14 @@ app.get('/api/posts', (req, res, next) => {
     })
     .catch((err) => {
       console.log('error', err);
+    });
+});
+
+app.delete(baseURL + '/:id', (req, res, next) => {
+  Post.deleteOne({_id: req.params.id})
+    .then(result => {
+      console.log(result);
+      res.status(200).json({ message: 'Post deleted!'});
     });
 });
 

@@ -8,12 +8,32 @@ import { Post } from "./post.model";
 export class PostsService {
   private posts: Post[] = [];
   private postsUpdated = new Subject<Post[]>();
+  private baseURL = 'http://localhost:3000/api/posts';
 
   constructor(private http: HttpClient) {}
 
+  addPost(post) {
+    this.http
+      .post<{message: string}>(this.baseURL, post)
+      .subscribe((responseData) => {
+        console.log(responseData.message);
+        this.posts.push(post);
+        this.postsUpdated.next([...this.posts]);
+      }
+    );
+  }
+
+  deletePost(id: string) {
+    this.http
+      .delete<{message: string}>(`${this.baseURL}/${id}`)
+        .subscribe((responseData) => {
+          console.log(responseData.message);
+        });
+  }
+
   getPosts() {
     this.http
-      .get<{message: string, posts: any}>('http://localhost:3000/api/posts')
+      .get<{message: string, posts: any}>(this.baseURL)
       .pipe(map((postData) => {
         return postData.posts.map(post => {
           return {
@@ -33,12 +53,5 @@ export class PostsService {
     return this.postsUpdated.asObservable();
   }
 
-  addPost(post) {
-    this.http.post<{message: string}>('http://localhost:3000/api/posts', post)
-    .subscribe((responseData) => {
-      console.log(responseData.message);
-      this.posts.push(post);
-      this.postsUpdated.next([...this.posts]);
-    });
-  }
+
 }
