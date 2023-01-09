@@ -2,6 +2,22 @@ const express = require('express');
 
 const app = express();
 
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+
+  res.setHeader(
+    'Access-Control-Allow-Header',
+    'Accept, Origin, Content-Type, X-Requested-With'
+  );
+
+  res.setHeader(
+    'Access-Control-Allow-Methods',
+    'DELETE, GET, OPTIONS, PATCH, POST'
+  );
+
+  next();
+});
+
 app.use('/api/posts', (req, res, next) => {
   const posts = [
     {
