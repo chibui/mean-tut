@@ -12,11 +12,14 @@ export class PostsService {
 
   constructor(private http: HttpClient) {}
 
-  addPost(post) {
+  addPost(post: Post) {
     this.http
-      .post<{message: string}>(this.baseURL, post)
+      .post<{message: string, postId: string}>(this.baseURL, post)
       .subscribe((responseData) => {
         console.log(responseData.message);
+
+        post.id = responseData.postId;
+
         this.posts.push(post);
         this.postsUpdated.next([...this.posts]);
       }

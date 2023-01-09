@@ -42,10 +42,16 @@ app.post(baseURL, (req, res, next) => {
     title: req.body.title
   });
 
-  post.save();
+  post.save().then(result => {
+    console.log('result', result);
 
-  res.status(201).json({
-    message: 'Post added successfully'
+    res.status(201).json({
+      message: 'Post added successfully',
+      postId: result._id
+    });
+  })
+  .catch(err => {
+    console.log('err', err);
   });
 })
 
@@ -67,6 +73,9 @@ app.delete(`${baseURL}/:id`, (req, res, next) => {
     .then(result => {
       console.log(result);
       res.status(200).json({ message: 'Post deleted!'});
+    })
+    .catch(err => {
+      console.log('err', err);
     });
 });
 
