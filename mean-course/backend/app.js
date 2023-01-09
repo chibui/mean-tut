@@ -10,7 +10,7 @@ app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
 
   res.setHeader(
-    'Access-Control-Allow-Header',
+    'Access-Control-Allow-Headers',
     'Accept, Origin, Content-Type, X-Requested-With'
   );
 
@@ -32,7 +32,7 @@ app.post('/api/posts', (req, res, next) => {
   });
 })
 
-app.use('/api/posts', (req, res, next) => {
+app.get('/api/posts', (req, res, next) => {
   const posts = [
     {
       content: 'This is coming from the server',
