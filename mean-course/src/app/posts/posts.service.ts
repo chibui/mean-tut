@@ -37,6 +37,10 @@ export class PostsService {
         });
   }
 
+  getPost(id: string) {
+    return {...this.posts.find(post => post.id === id)};
+  }
+
   getPosts() {
     this.http
       .get<{message: string, posts: any}>(this.baseURL)

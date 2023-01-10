@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, ParamMap } from '@angular/router';
 import { NgForm } from '@angular/forms';
+
 import { Post } from '../post.model';
 import { PostsService } from '../posts.service';
 
@@ -8,11 +10,30 @@ import { PostsService } from '../posts.service';
   templateUrl: './post-create.component.html',
   styleUrls: ['./post-create.component.css']
 })
-export class PostCreateComponent {
+export class PostCreateComponent implements OnInit{
   enteredContent = '';
   enteredTitle = '';
+  private mode = 'create';
+  private post: Post;
+  private postId: string;
 
-  constructor(public postsService: PostsService) {}
+  constructor(
+    public route: ActivatedRoute,
+    public postsService: PostsService
+  ) {}
+
+  ngOnInit(): void {
+    this.route.paramMap.subscribe((paramMap: ParamMap) => {
+      if (paramMap.has('postId')) {
+        this.mode = 'edit';
+        this.postId = paramMap.get('postId');
+        this.post = this.postsService.getPost(this.postId);
+      } else {
+        this.mode = 'create';
+        this.postId = paramMap.get('postId');
+      }
+    });
+  }
 
   onAddPost(form: NgForm) {
     if (form.invalid) { return };
