@@ -13,6 +13,8 @@ import { MatPaginatorModule} from '@angular/material/paginator';
 import { MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { MatToolbarModule} from '@angular/material/toolbar';
 
+import { AppRoutingModule } from './app.routing.module';
+
 import { AppComponent } from './app.component';
 import { PostsComponent } from './posts/posts.component';
 import { PostCreateComponent } from './posts/post-create/post-create.component';
@@ -28,6 +30,7 @@ import { PostListComponent } from './posts/post-list/post-list.component';
     PostListComponent,
   ],
   imports: [
+    AppRoutingModule,
     BrowserAnimationsModule,
     BrowserModule,
     FormsModule,
