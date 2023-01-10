@@ -13,8 +13,8 @@ import { PostsService } from '../posts.service';
 export class PostCreateComponent implements OnInit{
   enteredContent = '';
   enteredTitle = '';
+  post: Post;
   private mode = 'create';
-  private post: Post;
   private postId: string;
 
   constructor(
@@ -30,21 +30,18 @@ export class PostCreateComponent implements OnInit{
         this.post = this.postsService.getPost(this.postId);
       } else {
         this.mode = 'create';
-        this.postId = paramMap.get('postId');
+        this.postId = null;
       }
     });
   }
 
-  onAddPost(form: NgForm) {
+  onSavePost(form: NgForm) {
     if (form.invalid) { return };
 
-    const post: Post = {
-      content: form.value.content,
-      id: null,
-      title: form.value.title
-    }
+    this.mode === 'create'
+      ? this.postsService.addPost(form.value.content, form.value.title)
+      : this.postsService.updatePost(form.value.content, this.postId, form.value.title);
 
-    this.postsService.addPost(post);
     form.resetForm();
   }
 }

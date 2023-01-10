@@ -30,7 +30,7 @@ app.use((req, res, next) => {
 
   res.setHeader(
     'Access-Control-Allow-Methods',
-    'DELETE, GET, OPTIONS, PATCH, POST'
+    'DELETE, GET, OPTIONS, PATCH, POST, PUT'
   );
 
   next();
@@ -73,6 +73,23 @@ app.delete(`${baseURL}/:id`, (req, res, next) => {
     .then(result => {
       console.log(result);
       res.status(200).json({ message: 'Post deleted!'});
+    })
+    .catch(err => {
+      console.log('err', err);
+    });
+});
+
+app.put(`${baseURL}/:id`, (req, res, next) => {
+  const post = new Post({
+    content: req.body.content,
+    _id: req.body.id,
+    title: req.body.title
+  });
+
+  Post.updateOne({ _id: req.params.id }, post)
+    .then(result => {
+      console.log('update', result);
+      res.status(200).json({ message: 'Post updated successfully!'});
     })
     .catch(err => {
       console.log('err', err);

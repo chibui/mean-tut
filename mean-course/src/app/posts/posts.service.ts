@@ -12,7 +12,13 @@ export class PostsService {
 
   constructor(private http: HttpClient) {}
 
-  addPost(post: Post) {
+  addPost(content: string, title: string) {
+    const post: Post = {
+      content: content,
+      id: null,
+      title: title
+    }
+
     this.http
       .post<{message: string, postId: string}>(this.baseURL, post)
       .subscribe((responseData) => {
@@ -63,5 +69,17 @@ export class PostsService {
     return this.postsUpdated.asObservable();
   }
 
+  updatePost(content: string, id: string, title: string) {
+    const post: Post = {
+      content: content,
+      id: id,
+      title: title
+    };
 
+    this.http
+      .put(`${this.baseURL}/${id}`, post)
+      .subscribe(response => {
+        console.log(response);
+      });
+  }
 }
