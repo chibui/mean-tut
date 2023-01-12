@@ -6,3 +6,11 @@ textarea {
 mat-spinner {
   margin: auto;
 }
+
+input[type="file"] {
+  visibility: hidden;
+}
+
+.file-upload {
+  padding-bottom: 22.4px;
+}
