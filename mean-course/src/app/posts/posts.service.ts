@@ -20,7 +20,7 @@ export class PostsService {
     }
 
     this.http
-      .post<{message: string, postId: string}>(this.baseURL, post)
+      .post<{ message: string, postId: string }>(this.baseURL, post)
       .subscribe((responseData) => {
         console.log(responseData.message);
 
@@ -34,7 +34,7 @@ export class PostsService {
 
   deletePost(postId: string) {
     this.http
-      .delete<{message: string}>(`${this.baseURL}/${postId}`)
+      .delete<{ message: string }>(`${this.baseURL}/${postId}`)
         .subscribe(() => {
           const updatedPosts = this.posts.filter(post => post.id !== postId);
 
@@ -44,12 +44,14 @@ export class PostsService {
   }
 
   getPost(id: string) {
-    return {...this.posts.find(post => post.id === id)};
+    // return {...this.posts.find(post => post.id === id)};
+    return this.http
+      .get<{ content: string, _id: string, title: string }>(`${this.baseURL}/${id}`);
   }
 
   getPosts() {
     this.http
-      .get<{message: string, posts: any}>(this.baseURL)
+      .get<{ message: string, posts: any }>(this.baseURL)
       .pipe(map((postData) => {
         return postData.posts.map(post => {
           return {
@@ -80,6 +82,14 @@ export class PostsService {
       .put(`${this.baseURL}/${id}`, post)
       .subscribe(response => {
         console.log(response);
+
+        const updatedPosts = [...this.posts];
+        const oldPostIndex = updatedPosts.findIndex(p => p.id === post.id);
+
+        updatedPosts[oldPostIndex] = post;
+
+        this.posts = updatedPosts;
+        this.postsUpdated.next([...this.posts]);
       });
   }
 }
