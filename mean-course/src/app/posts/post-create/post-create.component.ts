@@ -14,6 +14,7 @@ import { map } from 'rxjs/operators';
 export class PostCreateComponent implements OnInit{
   enteredContent = '';
   enteredTitle = '';
+  isLoading: boolean = false;
   post: Post;
   private mode = 'create';
   private postId: string;
@@ -28,8 +29,10 @@ export class PostCreateComponent implements OnInit{
       if (paramMap.has('postId')) {
         this.mode = 'edit';
         this.postId = paramMap.get('postId');
+        this.isLoading = true;
         this.postsService.getPost(this.postId)
           .subscribe(postData => {
+            this.isLoading = false;
             this.post = {
               content: postData.content,
               id: postData._id,
@@ -45,7 +48,8 @@ export class PostCreateComponent implements OnInit{
 
   onSavePost(form: NgForm) {
     if (form.invalid) { return };
-
+    this.isLoading = true;
+    
     this.mode === 'create'
       ? this.postsService.addPost(form.value.content, form.value.title)
       : this.postsService.updatePost(form.value.content, this.postId, form.value.title);
