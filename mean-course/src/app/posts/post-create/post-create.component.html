@@ -20,7 +20,7 @@
         Select Image
       </button>
 
-      <input type="file" #filePicker>
+      <input type="file" #filePicker (change)="onImagePicked($event)">
     </div>
 
     <mat-form-field>
