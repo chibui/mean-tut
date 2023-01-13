@@ -17,19 +17,21 @@ export class PostsService {
     private router: Router
   ) {}
 
-  addPost(content: string, title: string) {
-    const post: Post = {
-      content: content,
-      id: null,
-      title: title
-    }
+  addPost(content: string, image: File, title: string) {
+    const postData = new FormData();
+
+    postData.append('content', content);
+    postData.append('image', image, title);
+    postData.append('title', title);
 
     this.http
-      .post<{ message: string, postId: string }>(this.baseURL, post)
+      .post<{ message: string, postId: string }>(this.baseURL, postData)
       .subscribe((responseData) => {
-        console.log(responseData.message);
-
-        post.id = responseData.postId;
+        const post: Post = {
+          content: content,
+          id: responseData.postId,
+          title: title
+        }
 
         this.posts.push(post);
         this.afterPost()
