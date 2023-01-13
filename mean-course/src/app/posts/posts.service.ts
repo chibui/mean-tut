@@ -25,11 +25,12 @@ export class PostsService {
     postData.append('title', title);
 
     this.http
-      .post<{ message: string, postId: string }>(this.baseURL, postData)
+      .post<{ message: string, post: Post }>(this.baseURL, postData)
       .subscribe((responseData) => {
         const post: Post = {
           content: content,
-          id: responseData.postId,
+          id: responseData.post.id,
+          imagePath: responseData.post.imagePath,
           title: title
         }
 
@@ -68,6 +69,7 @@ export class PostsService {
           return {
             content: post.content,
             id: post._id,
+            imagePath: post.imagePath,
             title: post.title
           }
         });
@@ -86,6 +88,7 @@ export class PostsService {
     const post: Post = {
       content: content,
       id: id,
+      imagePath: null,
       title: title
     };
 
