@@ -54,12 +54,13 @@ export class PostCreateComponent implements OnInit{
             this.post = {
               content: postData.content,
               id: postData._id,
-              imagePath: null,
+              imagePath: postData.imagePath,
               title: postData.title,
             };
 
             this.postForm.setValue({
               'content': this.post.content,
+              'image': this.post.imagePath,
               'title': this.post.title
             });
           });
@@ -74,7 +75,7 @@ export class PostCreateComponent implements OnInit{
     const file = (event.target as HTMLInputElement).files[0];
     const reader = new FileReader();
 
-    this.postForm.patchValue({image: file});
+    this.postForm.patchValue({ image: file });
     this.postForm.get('image').updateValueAndValidity();
 
     reader.onload = () => {
@@ -94,7 +95,12 @@ export class PostCreateComponent implements OnInit{
           this.postForm.value.image,
           this.postForm.value.title
         )
-      : this.postsService.updatePost(this.postForm.value.content, this.postId, this.postForm.value.title);
+      : this.postsService.updatePost(
+          this.postForm.value.content,
+          this.postId,
+          this.postForm.value.image,
+          this.postForm.value.title
+        );
 
     this.postForm.reset();
   }

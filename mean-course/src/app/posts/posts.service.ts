@@ -58,7 +58,12 @@ export class PostsService {
 
   getPost(id: string) {
     return this.http
-      .get<{ content: string, _id: string, title: string }>(`${this.baseURL}/${id}`);
+      .get<{
+        content: string,
+        _id: string,
+        imagePath: string,
+        title: string }>
+      (`${this.baseURL}/${id}`);
   }
 
   getPosts() {
@@ -84,22 +89,36 @@ export class PostsService {
     return this.postsUpdated.asObservable();
   }
 
-  updatePost(content: string, id: string, title: string) {
-    const post: Post = {
-      content: content,
-      id: id,
-      imagePath: null,
-      title: title
-    };
+  updatePost(content: string, id: string, image: File | string, title: string) {
+    let postData: FormData | Post;
+    if (typeof(image) === 'object') {
+      postData = new FormData();
+      postData.append('content', content);
+      postData.append('id', id);
+      postData.append('image', image, title);
+      postData.append('title', title);
+    } else {
+      postData = {
+        content: content,
+        id: id,
+        imagePath: image as string,
+        title: title
+      };
+    }
 
     this.http
-      .put(`${this.baseURL}/${id}`, post)
+      .put(`${this.baseURL}/${id}`, postData)
       .subscribe(response => {
         console.log(response);
 
         const updatedPosts = [...this.posts];
-        const oldPostIndex = updatedPosts.findIndex(p => p.id === post.id);
-
+        const oldPostIndex = updatedPosts.findIndex(p => p.id === id);
+        const post: Post = {
+          content: content,
+          id: id,
+          imagePath: null,
+          title: title
+        };
         updatedPosts[oldPostIndex] = post;
 
         this.posts = updatedPosts;

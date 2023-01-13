@@ -93,12 +93,23 @@ router.delete('/:id', (req, res, next) => {
     });
 });
 
-router.put('/:id', (req, res, next) => {
-  const post = new Post({
-    content: req.body.content,
-    _id: req.body.id,
-    title: req.body.title
-  });
+router.put(
+  '/:id',
+  multer({storage: storage}).single('image'),
+  (req, res, next) => {
+    let imagePath = req.body.imagePath;
+
+    if (req.file) {
+      const url = `${req.protocol}://${req.get('host')}`;
+      imagePath = `${url}/images/${req.file.filename}`
+    }
+
+    const post = new Post({
+      content: req.body.content,
+      _id: req.body.id,
+      imagePath: imagePath,
+      title: req.body.title
+    });
 
   Post.updateOne({ _id: req.params.id }, post)
     .then(result => {
@@ -107,7 +118,8 @@ router.put('/:id', (req, res, next) => {
     })
     .catch(err => {
       console.log('err', err);
-    });
+    }
+  );
 });
 
 module.exports = router;
