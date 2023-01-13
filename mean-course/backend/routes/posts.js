@@ -33,7 +33,7 @@ router.post('', multer({storage: storage}).single('image'), (req, res, next) => 
 
   const post = new Post({
     content: req.body.content,
-    image: `${url}/images/${req.file.filename}`,
+    imagePath: `${url}/images/${req.file.filename}`,
     title: req.body.title
   });
 
