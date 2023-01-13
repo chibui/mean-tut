@@ -4,6 +4,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { Post } from '../post.model';
 import { PostsService } from '../posts.service';
+import { mimeTypeValidator } from 'src/app/validators/mime-type.validator';
 
 @Component({
   selector: 'app-post-create',
@@ -33,7 +34,8 @@ export class PostCreateComponent implements OnInit{
         ]
       }),
       'image': new FormControl(null, {
-        validators: [Validators.required]
+        validators: [ Validators.required ],
+        asyncValidators: [ mimeTypeValidator]
       }),
       'title': new FormControl(null, {
         validators: [ Validators.required ]
