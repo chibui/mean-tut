@@ -14,3 +14,12 @@ input[type="file"] {
 .file-upload {
   padding-bottom: 22.4px;
 }
+
+.imagePreviewSrc {
+  height: 5rem;
+  margin: 1rem 0;
+}
+
+.imagePreviewSrc img {
+  height: 100%;
+}
