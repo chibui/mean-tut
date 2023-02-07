@@ -66,9 +66,11 @@ export class PostsService {
       (`${this.baseURL}/${id}`);
   }
 
-  getPosts() {
+  getPosts(currentPage: number = 1, postsPerPage: number = 1) {
+    const url = `${this.baseURL}?pageSize=${postsPerPage}&page=${currentPage}`;
+
     this.http
-      .get<{ message: string, posts: any }>(this.baseURL)
+      .get<{ message: string, posts: any }>(url)
       .pipe(map((postData) => {
         return postData.posts.map(post => {
           return {
