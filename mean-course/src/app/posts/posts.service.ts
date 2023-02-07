@@ -9,7 +9,7 @@ import { Post } from "./post.model";
 @Injectable({ providedIn: 'root' })
 export class PostsService {
   private posts: Post[] = [];
-  private postsUpdated = new Subject<Post[]>();
+  private postsUpdated = new Subject<{posts: Post[], postCount: number}>();
   private baseURL = 'http://localhost:3000/api/posts';
 
   constructor(
@@ -70,20 +70,25 @@ export class PostsService {
     const url = `${this.baseURL}?pageSize=${postsPerPage}&page=${currentPage}`;
 
     this.http
-      .get<{ message: string, posts: any }>(url)
+      .get<{ maxPosts: number, message: string, posts: any }>(url)
       .pipe(map((postData) => {
-        return postData.posts.map(post => {
+        return { posts: postData.posts.map(post => {
           return {
             content: post.content,
             id: post._id,
             imagePath: post.imagePath,
             title: post.title
           }
-        });
+        }),
+          maxPosts: postData.maxPosts
+        };
       }))
       .subscribe(transformedPosts => {
-        this.posts = transformedPosts;
-        this.postsUpdated.next([...this.posts]);
+        this.posts = transformedPosts.posts;
+        this.postsUpdated.next({
+          posts:[...this.posts],
+          postCount: transformedPosts.maxPosts
+        });
       });
   }
 
