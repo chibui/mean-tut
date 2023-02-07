@@ -26,34 +26,14 @@ export class PostsService {
 
     this.http
       .post<{ message: string, post: Post }>(this.baseURL, postData)
-      .subscribe((responseData) => {
-        const post: Post = {
-          content: content,
-          id: responseData.post.id,
-          imagePath: responseData.post.imagePath,
-          title: title
-        }
-
-        this.posts.push(post);
-        this.afterPost()
+      .subscribe(() => {
+        this.router.navigate(['/']);
       }
     );
   }
 
-  afterPost() {
-    this.postsUpdated.next([...this.posts]);
-    this.router.navigate(['/']);
-  }
-
   deletePost(postId: string) {
-    this.http
-      .delete<{ message: string }>(`${this.baseURL}/${postId}`)
-        .subscribe(() => {
-          const updatedPosts = this.posts.filter(post => post.id !== postId);
-
-          this.posts = updatedPosts;
-          this.postsUpdated.next([...this.posts]);
-        });
+    return this.http.delete<{ message: string }>(`${this.baseURL}/${postId}`);
   }
 
   getPost(id: string) {
@@ -116,20 +96,7 @@ export class PostsService {
     this.http
       .put(`${this.baseURL}/${id}`, postData)
       .subscribe(response => {
-        console.log(response);
-
-        const updatedPosts = [...this.posts];
-        const oldPostIndex = updatedPosts.findIndex(p => p.id === id);
-        const post: Post = {
-          content: content,
-          id: id,
-          imagePath: null,
-          title: title
-        };
-        updatedPosts[oldPostIndex] = post;
-
-        this.posts = updatedPosts;
-        this.afterPost();
+        this.router.navigate(['/']);
       });
   }
 }
