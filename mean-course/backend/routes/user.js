@@ -3,19 +3,17 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
-const JWT_SECRET = require('../constants');
+const JWT_SECRET = require('./routes.constants');
 
 const router = express.Router();
 
-const authError = () => {
-  return res.status(401).json({
+authError = () => {
+  res.status(401).json({
     message: "Auth failed"
   });
 }
 
 router.post('/signup', (req, res, next) => {
-  console.log('req', req);
-
   bcrypt.hash(req.body.password, 10)
     .then(hash => {
       const user = new User({
@@ -39,28 +37,41 @@ router.post('/signup', (req, res, next) => {
 });
 
 router.post('/login', (req, res, next) => {
+  let fetchedUser;
+
   User.findOne({ email: req.body.email })
-    .then(User => {
-      if (!User) {
-        authError();
+    .then(user => {
+      if (!user) {
+        return res.status(401).json({
+          message: "Auth failed"
+        });
       }
 
+      fetchedUser = user;
       return bcrypt.compare(req.body.password, user.password);
     })
     .then(result => {
       if (!result) {
-        authError();
+        return res.status(401).json({
+          message: "Auth failed"
+        });
       }
 
       const token = jwt.sign({
-        email: User.email,
-        userId: User._id },
+        email: fetchedUser.email,
+        userId: fetchedUser._id },
         JWT_SECRET,
         { expiresIn: '1h'}
       );
+
+      res.status(200).json({
+        token: token
+      });
     })
     .catch(err => {
-      authError();
+      return res.status(401).json({
+        message: "Auth failed"
+      });
     });
 });
 

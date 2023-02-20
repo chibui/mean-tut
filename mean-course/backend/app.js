@@ -9,6 +9,8 @@ const userRoutes = require('./routes/user');
 
 const app = express();
 
+mongoose.set('strictQuery', false);
+
 mongoose.connect(DB_CONNECT)
   .then(() => {
     console.log('Connected to database',);

@@ -12,3 +12,4 @@ web-build/
 
 # macOS
 .DS_Store
+mean-course/backend/routes/routes.constants.js
