@@ -7,7 +7,8 @@ import { AuthData } from "./auth-data.model";
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private authStatusLister = new Subject<boolean>();
-  private baseURL = 'http://localhost:3000/api/user/';
+  private baseURL: string = 'http://localhost:3000/api/user/';
+  private isAuthenticated: boolean = false;
   private token: string;
 
   constructor(private http: HttpClient) {}
@@ -28,6 +29,10 @@ export class AuthService {
     return this.authStatusLister.asObservable();
   }
 
+  getIsAuth() {
+    return this.isAuthenticated;
+  }
+
   getToken() {
     return this.token;
   }
@@ -42,7 +47,11 @@ export class AuthService {
       .subscribe(response => {
         const token = response.token;
         this.token = token;
-        this.authStatusLister.next(true);
+
+        if (token) {
+          this.isAuthenticated = true;
+          this.authStatusLister.next(true);
+        }
       });
   }
 }
