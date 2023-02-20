@@ -1,5 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { Router } from "@angular/router";
 import { response } from "express";
 import { Subject } from "rxjs";
 import { AuthData } from "./auth-data.model";
@@ -11,7 +12,10 @@ export class AuthService {
   private isAuthenticated: boolean = false;
   private token: string;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router
+  ) {}
 
   createUser(email:string, password: string) {
     const authData: AuthData = {
@@ -51,7 +55,15 @@ export class AuthService {
         if (token) {
           this.isAuthenticated = true;
           this.authStatusLister.next(true);
+          this.router.navigate(['/']);
         }
       });
+  }
+
+  logout() {
+    this.authStatusLister.next(false);
+    this.isAuthenticated = false;
+    this.token = null;
+    this.router.navigate(['/']);
   }
 }
