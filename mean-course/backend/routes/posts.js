@@ -1,5 +1,6 @@
 const express = require('express');
 const multer = require('multer');
+const checkAuth = require('../middleware/check-auth');
 
 const Post = require('../models/post');
 
@@ -28,29 +29,32 @@ const storage = multer.diskStorage({
   }
 });
 
-router.post('', multer({storage: storage}).single('image'), (req, res, next) => {
-  const url = `${req.protocol}://${req.get('host')}`;
+router.post(
+  '',
+  checkAuth,
+  multer({storage: storage}).single('image'), (req, res, next) => {
+    const url = `${req.protocol}://${req.get('host')}`;
 
-  const post = new Post({
-    content: req.body.content,
-    imagePath: `${url}/images/${req.file.filename}`,
-    title: req.body.title
-  });
-
-  post.save().then(createdPost => {
-    console.log('createdPost', createdPost);
-
-    res.status(201).json({
-      message: 'Post added successfully',
-      post: {
-        ...createdPost,
-        id: createdPost._id
-      }
+    const post = new Post({
+      content: req.body.content,
+      imagePath: `${url}/images/${req.file.filename}`,
+      title: req.body.title
     });
-  })
-  .catch(err => {
-    console.log('err', err);
-  });
+
+    post.save().then(createdPost => {
+      console.log('createdPost', createdPost);
+
+      res.status(201).json({
+        message: 'Post added successfully',
+        post: {
+          ...createdPost,
+          id: createdPost._id
+        }
+      });
+    })
+    .catch(err => {
+      console.log('err', err);
+    });
 })
 
 router.get('', (req, res, next) => {
@@ -111,6 +115,7 @@ router.delete('/:id', (req, res, next) => {
 
 router.put(
   '/:id',
+  checkAuth,
   multer({storage: storage}).single('image'),
   (req, res, next) => {
     let imagePath = req.body.imagePath;
