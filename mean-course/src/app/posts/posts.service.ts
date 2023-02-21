@@ -55,6 +55,7 @@ export class PostsService {
         return { posts: postData.posts.map(post => {
           return {
             content: post.content,
+            creator: post.creator,
             id: post._id,
             imagePath: post.imagePath,
             title: post.title
