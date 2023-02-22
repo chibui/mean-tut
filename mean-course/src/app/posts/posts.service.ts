@@ -40,6 +40,7 @@ export class PostsService {
     return this.http
       .get<{
         content: string,
+        creator: string,
         _id: string,
         imagePath: string,
         title: string }>
@@ -88,6 +89,7 @@ export class PostsService {
     } else {
       postData = {
         content: content,
+        creator: null,
         id: id,
         imagePath: image as string,
         title: title

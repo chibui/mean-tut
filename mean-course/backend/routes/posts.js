@@ -134,6 +134,7 @@ router.put(
 
     const post = new Post({
       content: req.body.content,
+      creator: req.userData.userId,
       _id: req.body.id,
       imagePath: imagePath,
       title: req.body.title

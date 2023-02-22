@@ -53,6 +53,7 @@ export class PostCreateComponent implements OnInit{
 
             this.post = {
               content: postData.content,
+              creator: postData.creator,
               id: postData._id,
               imagePath: postData.imagePath,
               title: postData.title,
