@@ -44,9 +44,12 @@ export class AuthService {
     };
 
     this.http.post(`${this.baseURL}signup`, authData)
-      .subscribe(response => {
-        console.log('response', response);
-      });
+    .subscribe({
+      next: () => this.router.navigate(['/']),
+      error: () => {
+        this.authStatusLister.next(false);
+      }
+    });;
   }
 
   getAuthStatusListener() {
@@ -72,22 +75,25 @@ export class AuthService {
     };
 
     this.http.post<{ expiresIn: number, token: string, userId: string }>(`${this.baseURL}login`, authData)
-      .subscribe(response => {
-        const token = response.token;
-        this.token = token;
+      .subscribe({
+        next: (response) => {
+          const token = response.token;
+          this.token = token;
 
-        if (token) {
-          const expiresInDuration = response.expiresIn;
-          const now = new Date();
-          const expirationDate = new Date(now.getTime() + expiresInDuration * 1000);
+          if (token) {
+            const expiresInDuration = response.expiresIn;
+            const now = new Date();
+            const expirationDate = new Date(now.getTime() + expiresInDuration * 1000);
 
-          this.setAuthTimer(expiresInDuration);
-          this.isAuthenticated = true;
-          this.authStatusLister.next(true);
-          this.userId = response.userId;
-          this.saveAuthData(expirationDate, token, this.userId);
-          this.router.navigate(['/']);
-        }
+            this.setAuthTimer(expiresInDuration);
+            this.isAuthenticated = true;
+            this.authStatusLister.next(true);
+            this.userId = response.userId;
+            this.saveAuthData(expirationDate, token, this.userId);
+            this.router.navigate(['/']);
+          }
+        },
+        error: () => this.authStatusLister.next(false)
       });
   }
 

@@ -33,18 +33,24 @@ export class PostListComponent implements OnInit, OnDestroy{
     this.postsService.getPosts(1, this.postsPerPage);
     this.userId = this.authService.getUserId();
     this.postsSub = this.postsService.getPostUpdateListener()
-      .subscribe((postData: { posts: Post[], postCount: number }) => {
-        this.isLoading = false;
-        this.posts = postData.posts;
-        this.totalPosts = postData.postCount;
+      .subscribe({
+        next: (postData: { posts: Post[], postCount: number }) => {
+          this.isLoading = false;
+          this.posts = postData.posts;
+          this.totalPosts = postData.postCount;
+        },
+        error: (error) => console.log('error', error)
       });
 
     this.userIsAuthenticated = this.authService.getIsAuth();
     this.authStatusSub = this.authService
       .getAuthStatusListener()
-      .subscribe(isAuthenticated => {
-        this.userId = this.authService.getUserId();
-        this.userIsAuthenticated = isAuthenticated;
+      .subscribe({
+        next: (isAuthenticated) => {
+          this.userId = this.authService.getUserId();
+          this.userIsAuthenticated = isAuthenticated;
+        },
+        error: (error) => console.log('error', error)
       })
   }
 
@@ -63,8 +69,10 @@ export class PostListComponent implements OnInit, OnDestroy{
   }
   onDeletePost(postId: string): void {
     this.isLoading = true;
-    this.postsService.deletePost(postId).subscribe(() => {
-      this.postsService.getPosts(this.currentPage, this.postsPerPage);
+    this.postsService.deletePost(postId)
+      .subscribe({
+        next: () => this.postsService.getPosts(this.currentPage, this.postsPerPage),
+        error: (error) => console.log('error', error)
     });
   }
 }

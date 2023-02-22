@@ -26,8 +26,9 @@ export class PostsService {
 
     this.http
       .post<{ message: string, post: Post }>(this.baseURL, postData)
-      .subscribe(() => {
-        this.router.navigate(['/']);
+      .subscribe({
+        next: () => this.router.navigate(['/']),
+        error: (error) => console.log('error', error)
       }
     );
   }
@@ -65,12 +66,15 @@ export class PostsService {
           maxPosts: postData.maxPosts
         };
       }))
-      .subscribe(transformedPosts => {
-        this.posts = transformedPosts.posts;
-        this.postsUpdated.next({
-          posts:[...this.posts],
-          postCount: transformedPosts.maxPosts
-        });
+      .subscribe({
+        next: (transformedPosts) => {
+          this.posts = transformedPosts.posts;
+          this.postsUpdated.next({
+            posts:[...this.posts],
+            postCount: transformedPosts.maxPosts
+          });
+        },
+        error: (error) => console.log('error', error)
       });
   }
 
@@ -98,8 +102,9 @@ export class PostsService {
 
     this.http
       .put(`${this.baseURL}/${id}`, postData)
-      .subscribe(response => {
-        this.router.navigate(['/']);
+      .subscribe({
+        next: () => this.router.navigate(['/']),
+        error: (error) => console.log('error', error)
       });
   }
 }

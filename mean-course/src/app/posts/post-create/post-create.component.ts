@@ -42,33 +42,39 @@ export class PostCreateComponent implements OnInit{
       }),
     });
 
-    this.route.paramMap.subscribe((paramMap: ParamMap) => {
-      if (paramMap.has('postId')) {
-        this.mode = 'edit';
-        this.postId = paramMap.get('postId');
-        this.isLoading = true;
-        this.postsService.getPost(this.postId)
-          .subscribe(postData => {
-            this.isLoading = false;
+    this.route.paramMap.subscribe({
+      next: (paramMap: ParamMap) => {
+        if (paramMap.has('postId')) {
+          this.mode = 'edit';
+          this.postId = paramMap.get('postId');
+          this.isLoading = true;
+          this.postsService.getPost(this.postId)
+            .subscribe({
+              next: (postData) => {
+                this.isLoading = false;
 
-            this.post = {
-              content: postData.content,
-              creator: postData.creator,
-              id: postData._id,
-              imagePath: postData.imagePath,
-              title: postData.title,
-            };
+                this.post = {
+                  content: postData.content,
+                  creator: postData.creator,
+                  id: postData._id,
+                  imagePath: postData.imagePath,
+                  title: postData.title,
+                };
 
-            this.postForm.setValue({
-              'content': this.post.content,
-              'image': this.post.imagePath,
-              'title': this.post.title
+                this.postForm.setValue({
+                  'content': this.post.content,
+                  'image': this.post.imagePath,
+                  'title': this.post.title
+                });
+              },
+              error: (error) => console.log('error', error)
             });
-          });
-      } else {
-        this.mode = 'create';
-        this.postId = null;
-      }
+        } else {
+          this.mode = 'create';
+          this.postId = null;
+        }
+      },
+      error: (error) => console.log('error', error)
     });
   }
 
