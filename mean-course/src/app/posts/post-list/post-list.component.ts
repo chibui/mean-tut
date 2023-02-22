@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
-import { Subscription } from 'rxjs';
+import { finalize, Subscription } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
 import { Post } from '../post.model';
 import { PostsService } from '../posts.service';
@@ -70,6 +70,9 @@ export class PostListComponent implements OnInit, OnDestroy{
   onDeletePost(postId: string): void {
     this.isLoading = true;
     this.postsService.deletePost(postId)
+      .pipe(
+        finalize(() => this.isLoading = false)
+      )
       .subscribe({
         next: () => this.postsService.getPosts(this.currentPage, this.postsPerPage),
         error: (error) => console.log('error', error)

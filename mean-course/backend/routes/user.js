@@ -7,12 +7,6 @@ const JWT_SECRET = require('./routes.constants');
 
 const router = express.Router();
 
-authError = () => {
-  res.status(401).json({
-    message: "Auth failed"
-  });
-}
-
 router.post('/signup', (req, res, next) => {
   bcrypt.hash(req.body.password, 10)
     .then(hash => {
@@ -28,9 +22,9 @@ router.post('/signup', (req, res, next) => {
             result: result
           });
         })
-        .catch(err => {
+        .catch(() => {
           res.status(500).json({
-            error: err
+            message: 'Invalid authentication credentials'
           });
         });
     });
@@ -43,7 +37,7 @@ router.post('/login', (req, res, next) => {
     .then(user => {
       if (!user) {
         return res.status(401).json({
-          message: "Auth failed"
+          message: 'Email or password is incorrect.'
         });
       }
 
@@ -53,7 +47,7 @@ router.post('/login', (req, res, next) => {
     .then(result => {
       if (!result) {
         return res.status(401).json({
-          message: "Auth failed"
+          message: 'Email or password is incorrect.'
         });
       }
 
@@ -72,7 +66,7 @@ router.post('/login', (req, res, next) => {
     })
     .catch(err => {
       return res.status(401).json({
-        message: "Auth failed"
+        message: 'Email or password is incorrect.'
       });
     });
 });

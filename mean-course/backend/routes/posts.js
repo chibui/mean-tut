@@ -55,6 +55,9 @@ router.post(
     })
     .catch(err => {
       console.log('err', err);
+      res.status(500).json({
+        message: 'Creating post failed'
+      });
     });
 })
 
@@ -82,8 +85,10 @@ router.get('', (req, res, next) => {
         posts: fetchedPosts
       });
     })
-    .catch((err) => {
-      console.log('error', err);
+    .catch(() => {
+      res.status(500).json({
+        message: 'Fetching posts failed'
+      });
     });
 });
 
@@ -98,8 +103,10 @@ router.get('/:id', (req, res, next) => {
         });
       }
     })
-    .catch((err) => {
-      console.log('error', err);
+    .catch(() => {
+      res.status(500).json({
+        message: 'Fetching post failed'
+      });
     });
 });
 
@@ -115,8 +122,10 @@ router.delete(
           res.status(401).json({ message: 'Not authorized'});
         }
       })
-      .catch(err => {
-        console.log('err', err);
+      .catch(() => {
+        res.status(500).json({
+          message: 'Deleting post failed'
+        });
       });
 });
 
@@ -149,7 +158,9 @@ router.put(
       }
     })
     .catch(err => {
-      console.log('err', err);
+      res.status(500).json({
+        message: 'Updating post failed'
+      });
     }
   );
 });
