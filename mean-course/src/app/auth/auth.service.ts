@@ -2,12 +2,13 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subject } from "rxjs";
+import { environment } from "src/environments/environment";
 import { AuthData } from "./auth-data.model";
 
+const BASE_URL = `${environment.apiUrl}/user/`;
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private authStatusLister = new Subject<boolean>();
-  private baseURL: string = 'http://localhost:3000/api/user/';
   private isAuthenticated: boolean = false;
   private token: string;
   private tokenTimer: any;
@@ -43,7 +44,7 @@ export class AuthService {
       password: password
     };
 
-    this.http.post(`${this.baseURL}signup`, authData)
+    this.http.post(`${BASE_URL}signup`, authData)
     .subscribe({
       next: () => this.router.navigate(['/']),
       error: () => {
@@ -74,7 +75,7 @@ export class AuthService {
       password: password
     };
 
-    this.http.post<{ expiresIn: number, token: string, userId: string }>(`${this.baseURL}login`, authData)
+    this.http.post<{ expiresIn: number, token: string, userId: string }>(`${BASE_URL}login`, authData)
       .subscribe({
         next: (response) => {
           const token = response.token;

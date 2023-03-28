@@ -4,13 +4,15 @@ import { Router } from "@angular/router";
 
 import { map, Subject } from "rxjs";
 
+import { environment } from "src/environments/environment";
+
 import { Post } from "./post.model";
 
+const BASE_URL = `${environment.apiUrl}/posts`;
 @Injectable({ providedIn: 'root' })
 export class PostsService {
   private posts: Post[] = [];
   private postsUpdated = new Subject<{posts: Post[], postCount: number}>();
-  private baseURL = 'http://localhost:3000/api/posts';
 
   constructor(
     private http: HttpClient,
@@ -25,14 +27,14 @@ export class PostsService {
     postData.append('title', title);
 
     this.http
-      .post<{ message: string, post: Post }>(this.baseURL, postData)
+      .post<{ message: string, post: Post }>(BASE_URL, postData)
       .subscribe(responseData => {
         this.router.navigate(['/']);
       });
   }
 
   deletePost(postId: string) {
-    return this.http.delete<{ message: string }>(`${this.baseURL}/${postId}`);
+    return this.http.delete<{ message: string }>(`${BASE_URL}/${postId}`);
   }
 
   getPost(id: string) {
@@ -43,11 +45,11 @@ export class PostsService {
         _id: string,
         imagePath: string,
         title: string }>
-      (`${this.baseURL}/${id}`);
+      (`${BASE_URL}/${id}`);
   }
 
   getPosts(currentPage: number = 1, postsPerPage: number = 1) {
-    const url = `${this.baseURL}?pageSize=${postsPerPage}&page=${currentPage}`;
+    const url = `${BASE_URL}?pageSize=${postsPerPage}&page=${currentPage}`;
 
     this.http
       .get<{ maxPosts: number, message: string, posts: any }>(url)
@@ -99,7 +101,7 @@ export class PostsService {
     }
 
     this.http
-      .put(`${this.baseURL}/${id}`, postData)
+      .put(`${BASE_URL}/${id}`, postData)
       .subscribe({
         next: () => this.router.navigate(['/']),
         error: (error) => console.log('error', error)
