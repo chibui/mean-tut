@@ -14,7 +14,6 @@ import { ErrorComponent } from './error/error/error.component';
 
 import { AngularMaterialModule } from './angular-material/angular-material.module';
 import { PostsModule } from './posts/posts.module';
-import { AuthModule } from './auth/auth.module';
 
 @NgModule({
   declarations: [
@@ -25,7 +24,6 @@ import { AuthModule } from './auth/auth.module';
   imports: [
     AngularMaterialModule,
     AppRoutingModule,
-    AuthModule,
     BrowserAnimationsModule,
     BrowserModule,
     HttpClientModule,
