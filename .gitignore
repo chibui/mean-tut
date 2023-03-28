@@ -14,3 +14,4 @@ web-build/
 .DS_Store
 mean-course/backend/routes/routes.constants.js
 mean-course/src/app/mean-course.code-workspace
+mean-course/backend/backend.zip
