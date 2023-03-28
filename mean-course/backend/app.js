@@ -2,7 +2,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const path = require('path');
-const DB_CONNECT = require('./constants');
 
 const postsRoutes = require('./routes/posts');
 const userRoutes = require('./routes/user');
@@ -11,7 +10,7 @@ const app = express();
 
 mongoose.set('strictQuery', false);
 
-mongoose.connect(DB_CONNECT)
+mongoose.connect(process.env.MONGO_ATLAS_PW)
   .then(() => {
     console.log('Connected to database',);
   })

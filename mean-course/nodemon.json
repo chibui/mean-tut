@@ -1,0 +1,6 @@
+{
+  "env": {
+    "MONGO_ATLAS_PW": "mongodb+srv://chi:sEcFpwXoTuMS2T0u@cluster0.dk0zvp7.mongodb.net/node-angular?retryWrites=true&w=majority",
+    "JWT_KEY": "secret_this_should_be_longer"
+  }
+}
