@@ -26,11 +26,9 @@ export class PostsService {
 
     this.http
       .post<{ message: string, post: Post }>(this.baseURL, postData)
-      .subscribe({
-        next: () => this.router.navigate(['/']),
-        error: (error) => console.log('error', error)
-      }
-    );
+      .subscribe(responseData => {
+        this.router.navigate(['/']);
+      });
   }
 
   deletePost(postId: string) {
