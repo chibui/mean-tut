@@ -4,14 +4,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { BrowserModule } from '@angular/platform-browser';
-import { MatButtonModule} from '@angular/material/button';
-import { MatCardModule} from '@angular/material/card';
-import { MatDialogModule} from '@angular/material/dialog';
-import { MatExpansionModule} from '@angular/material/expansion';
-import { MatInputModule} from '@angular/material/input';
-import { MatPaginatorModule} from '@angular/material/paginator';
-import { MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import { MatToolbarModule} from '@angular/material/toolbar';
 
 import { AppRoutingModule } from './app.routing.module';
 
@@ -25,6 +17,7 @@ import { SignupComponent } from './auth/signup/signup.component';
 import { AuthInterceptor } from './auth/auth.interceptor';
 import { ErrorInterceptor } from './error.interceptor';
 import { ErrorComponent } from './error/error/error.component';
+import { AngularMaterialModule } from './angular-material/angular-material.module';
 
 @NgModule({
   declarations: [
@@ -38,20 +31,13 @@ import { ErrorComponent } from './error/error/error.component';
     ErrorComponent
   ],
   imports: [
+    AngularMaterialModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule,
-    MatButtonModule,
-    MatCardModule,
-    MatDialogModule,
-    MatExpansionModule,
-    MatInputModule,
-    MatPaginatorModule,
-    MatProgressSpinnerModule,
-    MatToolbarModule
+    HttpClientModule
   ],
   providers: [
     {
